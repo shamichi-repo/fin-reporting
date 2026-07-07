@@ -1,0 +1,58 @@
+{
+  "servers": {
+    "ce-costcenter-mcp": {
+      "tools": {
+        "count_cost_centers": {
+          "description": "Count the total number of cost centers in SAP S/4HANA",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "controlling_area": {
+                "type": "string",
+                "description": "Optional controlling area filter (e.g. '0001')"
+              }
+            },
+            "required": []
+          },
+          "mock_response": {
+            "total_count": 142,
+            "controlling_area": "0001",
+            "as_of_date": "2025-01-01"
+          }
+        },
+        "list_top_cost_centers": {
+          "description": "List the top 5 cost centers ranked by total actual costs",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "controlling_area": {
+                "type": "string",
+                "description": "Controlling area (e.g. '0001')"
+              },
+              "fiscal_year": {
+                "type": "string",
+                "description": "Fiscal year (e.g. '2024')"
+              },
+              "top_n": {
+                "type": "integer",
+                "description": "Number of top cost centers to return (default: 5)"
+              }
+            },
+            "required": []
+          },
+          "mock_response": {
+            "cost_centers": [
+              {"id": "CC1000", "name": "IT Infrastructure", "actual_costs": 850000.00, "currency": "EUR", "controlling_area": "0001"},
+              {"id": "CC2000", "name": "Research & Development", "actual_costs": 720000.00, "currency": "EUR", "controlling_area": "0001"},
+              {"id": "CC3000", "name": "Sales Operations", "actual_costs": 610000.00, "currency": "EUR", "controlling_area": "0001"},
+              {"id": "CC4000", "name": "Human Resources", "actual_costs": 480000.00, "currency": "EUR", "controlling_area": "0001"},
+              {"id": "CC5000", "name": "Finance & Controlling", "actual_costs": 390000.00, "currency": "EUR", "controlling_area": "0001"}
+            ],
+            "fiscal_year": "2024",
+            "currency": "EUR"
+          }
+        }
+      }
+    }
+  }
+}

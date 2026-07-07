@@ -1,0 +1,160 @@
+{
+  "servers": {
+    "s4-sd-mcp": {
+      "tools": {
+        "get_sales_orders": {
+          "description": "Retrieve sales orders from SAP S/4HANA Sales & Distribution for a customer",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "customer_id": {
+                "type": "string",
+                "description": "SAP customer ID (e.g. 'C1000')"
+              },
+              "sales_org": {
+                "type": "string",
+                "description": "Sales organization (e.g. '0001')"
+              },
+              "date_from": {
+                "type": "string",
+                "description": "Start date for order range (YYYY-MM-DD)"
+              },
+              "date_to": {
+                "type": "string",
+                "description": "End date for order range (YYYY-MM-DD)"
+              }
+            },
+            "required": ["customer_id"]
+          },
+          "mock_response": {
+            "sales_orders": [
+              {
+                "order_id": "1000000001",
+                "customer_id": "C1000",
+                "customer_name": "Acme Corporation",
+                "order_date": "2025-01-15",
+                "net_value": 50000.00,
+                "currency": "USD",
+                "items": [
+                  {"material": "MAT001", "description": "Enterprise Software License", "quantity": 10, "unit_price": 5000.00, "cogs": 2000.00}
+                ]
+              },
+              {
+                "order_id": "1000000002",
+                "customer_id": "C1000",
+                "customer_name": "Acme Corporation",
+                "order_date": "2025-01-20",
+                "net_value": 25000.00,
+                "currency": "USD",
+                "items": [
+                  {"material": "SVC001", "description": "Implementation Services", "quantity": 50, "unit_price": 500.00, "cogs": 300.00}
+                ]
+              }
+            ],
+            "total_count": 2
+          }
+        },
+        "get_pricing_conditions": {
+          "description": "Retrieve current pricing conditions and discount structures for a customer/material",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "customer_id": {
+                "type": "string",
+                "description": "SAP customer ID"
+              },
+              "material_id": {
+                "type": "string",
+                "description": "SAP material ID"
+              },
+              "sales_org": {
+                "type": "string",
+                "description": "Sales organization"
+              }
+            },
+            "required": ["customer_id"]
+          },
+          "mock_response": {
+            "pricing_conditions": [
+              {"condition_type": "PR00", "description": "Base Price", "rate": 5000.00, "currency": "USD", "unit": "EA"},
+              {"condition_type": "K007", "description": "Customer Discount", "rate": -5.0, "unit": "%", "current_value": -250.00},
+              {"condition_type": "K020", "description": "Price Group Discount", "rate": -2.0, "unit": "%", "current_value": -100.00}
+            ],
+            "customer_id": "C1000",
+            "valid_from": "2025-01-01",
+            "valid_to": "2025-12-31"
+          }
+        },
+        "get_sales_price": {
+          "description": "Retrieve current sales price for a material in a sales organization",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "material_id": {
+                "type": "string",
+                "description": "SAP material ID"
+              },
+              "sales_org": {
+                "type": "string",
+                "description": "Sales organization"
+              },
+              "currency": {
+                "type": "string",
+                "description": "Currency code (e.g. 'USD')"
+              }
+            },
+            "required": ["material_id"]
+          },
+          "mock_response": {
+            "material_id": "MAT001",
+            "description": "Enterprise Software License",
+            "base_price": 5000.00,
+            "cogs": 2000.00,
+            "currency": "USD",
+            "gross_margin_pct": 60.0,
+            "sales_org": "0001",
+            "valid_from": "2025-01-01"
+          }
+        },
+        "simulate_sales_order": {
+          "description": "Simulate a sales order with a proposed discount to calculate resulting margin",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "customer_id": {
+                "type": "string",
+                "description": "SAP customer ID"
+              },
+              "material_id": {
+                "type": "string",
+                "description": "SAP material ID"
+              },
+              "quantity": {
+                "type": "integer",
+                "description": "Order quantity"
+              },
+              "proposed_discount_pct": {
+                "type": "number",
+                "description": "Proposed discount percentage (e.g. 10 for 10%)"
+              }
+            },
+            "required": ["customer_id", "material_id", "proposed_discount_pct"]
+          },
+          "mock_response": {
+            "simulation_result": {
+              "base_price": 5000.00,
+              "proposed_discount_pct": 10.0,
+              "discounted_price": 4500.00,
+              "cogs": 2000.00,
+              "gross_margin": 2500.00,
+              "gross_margin_pct": 55.56,
+              "margin_floor_pct": 15.0,
+              "margin_safe": true,
+              "recommendation": "APPROVED - Discount of 10% is margin-safe (55.56% margin > 15% floor)"
+            }
+          }
+        }
+      }
+    }
+  }
+}

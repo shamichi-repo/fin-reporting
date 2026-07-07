@@ -1,0 +1,11 @@
+apiVersion: solution.sap/v1
+kind: Solution
+
+metadata:
+  name: sap-ai-agents-afa19
+  version: "1.0.0"
+  description: "Two AI agents: Discount Strategy Agent for sales reps and Cost Center Intelligence Agent for Finance Controllers"
+
+assets:
+  - ref: ./assets/discount-strategy-agent/asset.yaml
+  - ref: ./assets/cost-center-intelligence-agent/asset.yaml
