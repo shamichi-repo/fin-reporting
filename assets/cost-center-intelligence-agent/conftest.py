@@ -122,6 +122,17 @@ def start_agent(agent_path: Path):
 
 
 def pytest_configure(config: pytest.Config) -> None:
+    # Unregister the system-level langsmith pytest plugin early to prevent a
+    # pydantic version conflict between /common/venv and .pip_packages.
+    try:
+        config.pluginmanager.unregister(name="langsmith_plugin")
+    except Exception:
+        pass
+    try:
+        config.pluginmanager.set_blocked("langsmith_plugin")
+    except Exception:
+        pass
+
     config.addinivalue_line("markers", "structure: Tests for file and module structure")
     config.addinivalue_line(
         "markers", "server: Tests for server startup and A2A endpoints"
